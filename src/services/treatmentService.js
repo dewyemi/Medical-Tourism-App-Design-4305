@@ -49,6 +49,22 @@ export const getTreatmentsByCategory = async (category) => {
   }
 };
 
+export const searchTreatments = async (searchTerm) => {
+  try {
+    const { data, error } = await supabase
+      .from(TABLE_NAME)
+      .select('*')
+      .or(`name.ilike.%${searchTerm}%,category.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`)
+      .order('procedure_count', { ascending: false });
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Error searching treatments:', error);
+    throw error;
+  }
+};
+
 export const createTreatment = async (treatmentData) => {
   try {
     const { data, error } = await supabase

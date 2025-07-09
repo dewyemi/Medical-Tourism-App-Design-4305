@@ -1,37 +1,58 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
 import * as FiIcons from 'react-icons/fi';
 import { useAuth } from '../contexts/AuthContext';
 
-const Login = () => {
-  const [email, setEmail] = useState('');
+const UpdatePassword = () => {
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
-  const { signIn, user } = useAuth();
+  const { updatePassword, user } = useAuth();
 
-  // Redirect if already logged in
+  // Check if user is authenticated via recovery flow
   useEffect(() => {
-    if (user) {
-      navigate(location.state?.from?.pathname || '/');
-    }
-  }, [user, navigate, location.state]);
+    const checkAuthStatus = async () => {
+      if (!user) {
+        // If no user, redirect to login
+        navigate('/login', { replace: true });
+      }
+    };
 
-  const handleLogin = async (e) => {
+    checkAuthStatus();
+  }, [user, navigate]);
+
+  const handleUpdatePassword = async (e) => {
     e.preventDefault();
+    
+    // Validate passwords match
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    // Validate password strength
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters long');
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
     try {
-      const { success, error } = await signIn({ email, password });
+      const { success, error } = await updatePassword(password);
       
       if (success) {
-        // Redirect will happen automatically via the useEffect
+        setSuccess(true);
+        setTimeout(() => {
+          navigate('/login');
+        }, 3000);
       } else {
-        throw new Error(error || 'Invalid email or password');
+        throw new Error(error || 'Failed to update password');
       }
     } catch (error) {
       setError(error.message);
@@ -47,9 +68,9 @@ const Login = () => {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-500 rounded-full mb-4">
             <span className="text-white font-bold text-2xl">M</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Welcome Back</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Update Password</h1>
           <p className="text-gray-600 mt-2">
-            Sign in to access your MediTravel account
+            Please enter your new password
           </p>
         </div>
 
@@ -59,57 +80,60 @@ const Login = () => {
           </div>
         )}
 
-        <form onSubmit={handleLogin}>
+        {success && (
+          <div className="mb-4 p-3 bg-green-50 text-green-600 rounded-lg text-sm">
+            Password updated successfully! Redirecting to login...
+          </div>
+        )}
+
+        <form onSubmit={handleUpdatePassword}>
           <div className="space-y-4">
             <div className="relative">
-              <SafeIcon icon={FiIcons.FiMail} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <SafeIcon icon={FiIcons.FiLock} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
-                type="email"
-                placeholder="Email address"
+                type="password"
+                placeholder="New password"
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
+                minLength={8}
               />
             </div>
             <div className="relative">
               <SafeIcon icon={FiIcons.FiLock} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
                 type="password"
-                placeholder="Password"
+                placeholder="Confirm new password"
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 required
+                minLength={8}
               />
-            </div>
-            <div className="text-right">
-              <Link to="/reset-password" className="text-sm text-primary-600 hover:underline">
-                Forgot password?
-              </Link>
             </div>
           </div>
 
           <button
             type="submit"
             className="w-full bg-primary-600 text-white py-3 mt-6 rounded-lg font-medium hover:bg-primary-700 transition-colors"
-            disabled={loading}
+            disabled={loading || success}
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? 'Updating...' : 'Update Password'}
           </button>
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-gray-600">
-            Need an account?{' '}
-            <Link to="/signup" className="text-primary-600 font-medium hover:underline">
-              Sign up
-            </Link>
-          </p>
+          <button
+            onClick={() => navigate('/login')}
+            className="text-primary-600 font-medium hover:underline"
+          >
+            Back to Login
+          </button>
         </div>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default UpdatePassword;

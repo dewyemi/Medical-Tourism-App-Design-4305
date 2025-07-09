@@ -1,7 +1,7 @@
 import React from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './components/AuthProvider';
-import ProtectedRoute from './components/ProtectedRoute';
+import { AuthProvider } from './contexts/AuthContext';
+import RequireAuth from './components/auth/RequireAuth';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import Destinations from './pages/Destinations';
@@ -13,84 +13,102 @@ import ProfileForm from './components/ProfileForm';
 import Bookings from './pages/Bookings';
 import Analytics from './pages/Analytics';
 import Login from './pages/Login';
+import SignUp from './pages/SignUp';
+import ResetPassword from './pages/ResetPassword';
+import UpdatePassword from './pages/UpdatePassword';
+import SearchPage from './pages/SearchPage';
+import Unauthorized from './pages/Unauthorized';
 
 function App() {
   return (
     <Router>
       <AuthProvider>
         <Routes>
+          {/* Public routes */}
           <Route path="/login" element={<Login />} />
-          
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/update-password" element={<UpdatePassword />} />
+          <Route path="/unauthorized" element={<Unauthorized />} />
+
+          {/* Protected routes - basic user access */}
           <Route path="/" element={
-            <ProtectedRoute>
+            <RequireAuth>
               <Layout>
                 <Home />
               </Layout>
-            </ProtectedRoute>
+            </RequireAuth>
           } />
           
           <Route path="/destinations" element={
-            <ProtectedRoute>
+            <RequireAuth>
               <Layout>
                 <Destinations />
               </Layout>
-            </ProtectedRoute>
+            </RequireAuth>
           } />
           
           <Route path="/destinations/:id" element={
-            <ProtectedRoute>
+            <RequireAuth>
               <Layout>
                 <DestinationDetail />
               </Layout>
-            </ProtectedRoute>
+            </RequireAuth>
           } />
           
           <Route path="/treatments" element={
-            <ProtectedRoute>
+            <RequireAuth>
               <Layout>
                 <Treatments />
               </Layout>
-            </ProtectedRoute>
+            </RequireAuth>
           } />
           
           <Route path="/treatments/:id" element={
-            <ProtectedRoute>
+            <RequireAuth>
               <Layout>
                 <TreatmentDetail />
               </Layout>
-            </ProtectedRoute>
+            </RequireAuth>
           } />
           
           <Route path="/profile" element={
-            <ProtectedRoute>
+            <RequireAuth>
               <Layout>
                 <Profile />
               </Layout>
-            </ProtectedRoute>
+            </RequireAuth>
           } />
           
           <Route path="/profile/edit" element={
-            <ProtectedRoute>
+            <RequireAuth>
               <Layout>
                 <ProfileForm />
               </Layout>
-            </ProtectedRoute>
+            </RequireAuth>
           } />
           
           <Route path="/bookings" element={
-            <ProtectedRoute>
+            <RequireAuth requiredPermissions={['bookings:read']}>
               <Layout>
                 <Bookings />
               </Layout>
-            </ProtectedRoute>
+            </RequireAuth>
           } />
           
+          {/* Analytics requires specific permissions */}
           <Route path="/analytics" element={
-            <ProtectedRoute>
+            <RequireAuth requiredPermissions={['analytics:read']}>
               <Layout>
                 <Analytics />
               </Layout>
-            </ProtectedRoute>
+            </RequireAuth>
+          } />
+          
+          <Route path="/search" element={
+            <RequireAuth>
+              <SearchPage />
+            </RequireAuth>
           } />
         </Routes>
       </AuthProvider>

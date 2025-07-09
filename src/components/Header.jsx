@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import SafeIcon from '../common/SafeIcon';
 import * as FiIcons from 'react-icons/fi';
+import Modal from './Modal';
+import SearchBar from './SearchBar';
 
 const { FiBell, FiSearch } = FiIcons;
 
 const Header = () => {
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+
   return (
     <header className="bg-white shadow-sm px-4 py-3 sticky top-0 z-50">
       <div className="flex items-center justify-between">
@@ -18,7 +22,10 @@ const Header = () => {
           </div>
         </div>
         <div className="flex items-center space-x-3">
-          <button className="p-2 rounded-full bg-gray-100">
+          <button 
+            className="p-2 rounded-full bg-gray-100"
+            onClick={() => setIsSearchModalOpen(true)}
+          >
             <SafeIcon icon={FiSearch} className="w-5 h-5 text-gray-600" />
           </button>
           <button className="p-2 rounded-full bg-gray-100 relative">
@@ -27,6 +34,10 @@ const Header = () => {
           </button>
         </div>
       </div>
+
+      <Modal isOpen={isSearchModalOpen} onClose={() => setIsSearchModalOpen(false)}>
+        <SearchBar onClose={() => setIsSearchModalOpen(false)} />
+      </Modal>
     </header>
   );
 };

@@ -1,43 +1,44 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
 import * as FiIcons from 'react-icons/fi';
 import Modal from './Modal';
 import BookingForm from './BookingForm';
 
-const { FiCalendar, FiPhone, FiFileText, FiDollarSign } = FiIcons;
+const { FiCalendar, FiPhone, FiFileText, FiDollarSign, FiMapPin, FiHeart, FiBarChart2 } = FiIcons;
 
 const QuickActions = () => {
+  const navigate = useNavigate();
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-
+  
   const handleBookingSuccess = () => {
-    // You can add a success notification here
     console.log('Booking created successfully!');
   };
 
   const actions = [
-    { 
-      icon: FiCalendar, 
-      label: 'Book Consultation', 
+    {
+      icon: FiCalendar,
+      label: 'Book Consultation',
       color: 'bg-blue-500',
       action: () => setIsBookingModalOpen(true)
     },
-    { 
-      icon: FiPhone, 
-      label: 'Call Support', 
+    {
+      icon: FiMapPin,
+      label: 'Destinations',
       color: 'bg-green-500',
-      action: () => window.open('tel:+1234567890')
+      action: () => navigate('/destinations')
     },
-    { 
-      icon: FiFileText, 
-      label: 'Get Quote', 
+    {
+      icon: FiHeart,
+      label: 'Treatments',
       color: 'bg-purple-500',
-      action: () => {}
+      action: () => navigate('/treatments')
     },
-    { 
-      icon: FiDollarSign, 
-      label: 'Price Compare', 
+    {
+      icon: FiBarChart2,
+      label: 'Analytics',
       color: 'bg-orange-500',
-      action: () => {}
+      action: () => navigate('/analytics')
     },
   ];
 
@@ -62,7 +63,7 @@ const QuickActions = () => {
       </div>
 
       <Modal isOpen={isBookingModalOpen} onClose={() => setIsBookingModalOpen(false)}>
-        <BookingForm 
+        <BookingForm
           onClose={() => setIsBookingModalOpen(false)}
           onSuccess={handleBookingSuccess}
         />

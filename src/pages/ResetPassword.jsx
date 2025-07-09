@@ -1,37 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
 import * as FiIcons from 'react-icons/fi';
 import { useAuth } from '../contexts/AuthContext';
 
-const Login = () => {
+const ResetPassword = () => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const location = useLocation();
-  const { signIn, user } = useAuth();
+  const { resetPassword } = useAuth();
 
-  // Redirect if already logged in
-  useEffect(() => {
-    if (user) {
-      navigate(location.state?.from?.pathname || '/');
-    }
-  }, [user, navigate, location.state]);
-
-  const handleLogin = async (e) => {
+  const handleResetPassword = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setMessage(null);
 
     try {
-      const { success, error } = await signIn({ email, password });
+      const { success, error } = await resetPassword(email);
       
       if (success) {
-        // Redirect will happen automatically via the useEffect
+        setMessage('Password reset instructions have been sent to your email.');
       } else {
-        throw new Error(error || 'Invalid email or password');
+        throw new Error(error || 'Failed to send reset instructions');
       }
     } catch (error) {
       setError(error.message);
@@ -47,9 +40,9 @@ const Login = () => {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-500 rounded-full mb-4">
             <span className="text-white font-bold text-2xl">M</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Welcome Back</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Reset Password</h1>
           <p className="text-gray-600 mt-2">
-            Sign in to access your MediTravel account
+            Enter your email address and we'll send you instructions to reset your password.
           </p>
         </div>
 
@@ -59,7 +52,13 @@ const Login = () => {
           </div>
         )}
 
-        <form onSubmit={handleLogin}>
+        {message && (
+          <div className="mb-4 p-3 bg-green-50 text-green-600 rounded-lg text-sm">
+            {message}
+          </div>
+        )}
+
+        <form onSubmit={handleResetPassword}>
           <div className="space-y-4">
             <div className="relative">
               <SafeIcon icon={FiIcons.FiMail} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -72,22 +71,6 @@ const Login = () => {
                 required
               />
             </div>
-            <div className="relative">
-              <SafeIcon icon={FiIcons.FiLock} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
-                type="password"
-                placeholder="Password"
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <div className="text-right">
-              <Link to="/reset-password" className="text-sm text-primary-600 hover:underline">
-                Forgot password?
-              </Link>
-            </div>
           </div>
 
           <button
@@ -95,21 +78,21 @@ const Login = () => {
             className="w-full bg-primary-600 text-white py-3 mt-6 rounded-lg font-medium hover:bg-primary-700 transition-colors"
             disabled={loading}
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? 'Sending...' : 'Send Reset Instructions'}
           </button>
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-gray-600">
-            Need an account?{' '}
-            <Link to="/signup" className="text-primary-600 font-medium hover:underline">
-              Sign up
-            </Link>
-          </p>
+          <button
+            onClick={() => navigate('/login')}
+            className="text-primary-600 font-medium hover:underline"
+          >
+            Back to Login
+          </button>
         </div>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default ResetPassword;
