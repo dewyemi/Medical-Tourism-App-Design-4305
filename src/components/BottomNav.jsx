@@ -2,19 +2,22 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
 import * as FiIcons from 'react-icons/fi';
+import { useLanguage } from '../contexts/LanguageContext';
 
-const { FiHome, FiMapPin, FiHeart, FiUser, FiBarChart2 } = FiIcons;
+const { FiHome, FiMapPin, FiHeart, FiUser, FiBarChart2, FiDollarSign } = FiIcons;
 
 const BottomNav = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
+  const { t } = useLanguage();
+  
   const navItems = [
-    { path: '/', icon: FiHome, label: 'Home' },
-    { path: '/destinations', icon: FiMapPin, label: 'Destinations' },
-    { path: '/treatments', icon: FiHeart, label: 'Treatments' },
-    { path: '/analytics', icon: FiBarChart2, label: 'Analytics' },
-    { path: '/profile', icon: FiUser, label: 'Profile' },
+    { path: '/', icon: FiHome, label: t('navigation.home') },
+    { path: '/destinations', icon: FiMapPin, label: t('navigation.destinations') },
+    { path: '/treatments', icon: FiHeart, label: t('navigation.treatments') },
+    { path: '/payments', icon: FiDollarSign, label: t('navigation.payments') },
+    { path: '/analytics', icon: FiBarChart2, label: t('navigation.analytics') },
+    { path: '/profile', icon: FiUser, label: t('navigation.profile') },
   ];
 
   return (

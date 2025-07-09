@@ -18,3 +18,26 @@ body {
   width: 100%;
   height: 100%;
 }
+
+/* RTL Support */
+[dir="rtl"] .reversed-icon {
+  transform: scaleX(-1);
+}
+
+/* Language-specific fonts */
+html[lang="ar"] body {
+  font-family: "Dubai", "Segoe UI", Tahoma, sans-serif;
+}
+
+/* Currency formatting */
+.currency-aed::before {
+  content: "د.إ";
+}
+
+.currency-usd::before {
+  content: "$";
+}
+
+.currency-xof::before {
+  content: "CFA";
+}
