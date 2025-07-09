@@ -3,6 +3,7 @@ import {HashRouter as Router, Routes, Route} from 'react-router-dom';
 import {AuthProvider} from './contexts/AuthContext';
 import {LanguageProvider} from './contexts/LanguageContext';
 import {PaymentProvider} from './contexts/PaymentContext';
+import {PatientJourneyProvider} from './contexts/PatientJourneyContext';
 import RequireAuth from './components/auth/RequireAuth';
 import Layout from './components/Layout';
 import Home from './pages/Home';
@@ -24,6 +25,7 @@ import SearchPage from './pages/SearchPage';
 import Unauthorized from './pages/Unauthorized';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import PaymentsPage from './pages/PaymentsPage';
+import PatientJourney from './pages/PatientJourney';
 
 function App() {
   return (
@@ -31,112 +33,122 @@ function App() {
       <LanguageProvider>
         <AuthProvider>
           <PaymentProvider>
-            <Routes>
-              {/* Public routes */}
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/provider-signup" element={<ProviderSignUp />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/update-password" element={<UpdatePassword />} />
-              <Route path="/unauthorized" element={<Unauthorized />} />
-              
-              {/* Protected routes - basic user access */}
-              <Route path="/" element={
-                <RequireAuth>
-                  <Layout>
-                    <Home />
-                  </Layout>
-                </RequireAuth>
-              } />
-              
-              <Route path="/destinations" element={
-                <RequireAuth>
-                  <Layout>
-                    <Destinations />
-                  </Layout>
-                </RequireAuth>
-              } />
-              
-              <Route path="/destinations/:id" element={
-                <RequireAuth>
-                  <Layout>
-                    <DestinationDetail />
-                  </Layout>
-                </RequireAuth>
-              } />
-              
-              <Route path="/treatments" element={
-                <RequireAuth>
-                  <Layout>
-                    <Treatments />
-                  </Layout>
-                </RequireAuth>
-              } />
-              
-              <Route path="/treatments/:id" element={
-                <RequireAuth>
-                  <Layout>
-                    <TreatmentDetail />
-                  </Layout>
-                </RequireAuth>
-              } />
-              
-              <Route path="/profile" element={
-                <RequireAuth>
-                  <Layout>
-                    <UserProfileWithRole />
-                  </Layout>
-                </RequireAuth>
-              } />
-              
-              <Route path="/profile/edit" element={
-                <RequireAuth>
-                  <Layout>
-                    <ProfileForm />
-                  </Layout>
-                </RequireAuth>
-              } />
-              
-              <Route path="/bookings" element={
-                <RequireAuth requiredPermissions={['bookings:read']}>
-                  <Layout>
-                    <Bookings />
-                  </Layout>
-                </RequireAuth>
-              } />
-              
-              <Route path="/payments" element={
-                <RequireAuth requiredPermissions={['bookings:read']}>
-                  <Layout>
-                    <PaymentsPage />
-                  </Layout>
-                </RequireAuth>
-              } />
-              
-              {/* Analytics requires specific permissions */}
-              <Route path="/analytics" element={
-                <RequireAuth requiredPermissions={['analytics:read']}>
-                  <Layout>
-                    <Analytics />
-                  </Layout>
-                </RequireAuth>
-              } />
-              
-              <Route path="/search" element={
-                <RequireAuth>
-                  <SearchPage />
-                </RequireAuth>
-              } />
-              
-              {/* Admin routes */}
-              <Route path="/admin" element={
-                <RequireAuth requiredRoles={['admin']}>
-                  <Layout>
-                    <AdminDashboard />
-                  </Layout>
-                </RequireAuth>
-              } />
-            </Routes>
+            <PatientJourneyProvider>
+              <Routes>
+                {/* Public routes */}
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/provider-signup" element={<ProviderSignUp />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/update-password" element={<UpdatePassword />} />
+                <Route path="/unauthorized" element={<Unauthorized />} />
+                
+                {/* Protected routes - basic user access */}
+                <Route path="/" element={
+                  <RequireAuth>
+                    <Layout>
+                      <PatientJourney />
+                    </Layout>
+                  </RequireAuth>
+                } />
+                
+                <Route path="/destinations" element={
+                  <RequireAuth>
+                    <Layout>
+                      <Destinations />
+                    </Layout>
+                  </RequireAuth>
+                } />
+                
+                <Route path="/destinations/:id" element={
+                  <RequireAuth>
+                    <Layout>
+                      <DestinationDetail />
+                    </Layout>
+                  </RequireAuth>
+                } />
+                
+                <Route path="/treatments" element={
+                  <RequireAuth>
+                    <Layout>
+                      <Treatments />
+                    </Layout>
+                  </RequireAuth>
+                } />
+                
+                <Route path="/treatments/:id" element={
+                  <RequireAuth>
+                    <Layout>
+                      <TreatmentDetail />
+                    </Layout>
+                  </RequireAuth>
+                } />
+                
+                <Route path="/profile" element={
+                  <RequireAuth>
+                    <Layout>
+                      <UserProfileWithRole />
+                    </Layout>
+                  </RequireAuth>
+                } />
+                
+                <Route path="/profile/edit" element={
+                  <RequireAuth>
+                    <Layout>
+                      <ProfileForm />
+                    </Layout>
+                  </RequireAuth>
+                } />
+                
+                <Route path="/bookings" element={
+                  <RequireAuth requiredPermissions={['bookings:read']}>
+                    <Layout>
+                      <Bookings />
+                    </Layout>
+                  </RequireAuth>
+                } />
+                
+                <Route path="/payments" element={
+                  <RequireAuth requiredPermissions={['bookings:read']}>
+                    <Layout>
+                      <PaymentsPage />
+                    </Layout>
+                  </RequireAuth>
+                } />
+                
+                <Route path="/journey" element={
+                  <RequireAuth>
+                    <Layout>
+                      <PatientJourney />
+                    </Layout>
+                  </RequireAuth>
+                } />
+                
+                {/* Analytics requires specific permissions */}
+                <Route path="/analytics" element={
+                  <RequireAuth requiredPermissions={['analytics:read']}>
+                    <Layout>
+                      <Analytics />
+                    </Layout>
+                  </RequireAuth>
+                } />
+                
+                <Route path="/search" element={
+                  <RequireAuth>
+                    <SearchPage />
+                  </RequireAuth>
+                } />
+                
+                {/* Admin routes */}
+                <Route path="/admin" element={
+                  <RequireAuth requiredRoles={['admin']}>
+                    <Layout>
+                      <AdminDashboard />
+                    </Layout>
+                  </RequireAuth>
+                } />
+              </Routes>
+            </PatientJourneyProvider>
           </PaymentProvider>
         </AuthProvider>
       </LanguageProvider>
