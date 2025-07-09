@@ -10,14 +10,17 @@ import Treatments from './pages/Treatments';
 import TreatmentDetail from './components/TreatmentDetail';
 import Profile from './pages/Profile';
 import ProfileForm from './components/ProfileForm';
+import UserProfileWithRole from './components/UserProfileWithRole';
 import Bookings from './pages/Bookings';
 import Analytics from './pages/Analytics';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
+import ProviderSignUp from './pages/ProviderSignUp';
 import ResetPassword from './pages/ResetPassword';
 import UpdatePassword from './pages/UpdatePassword';
 import SearchPage from './pages/SearchPage';
 import Unauthorized from './pages/Unauthorized';
+import AdminDashboard from './pages/admin/AdminDashboard';
 
 function App() {
   return (
@@ -27,6 +30,7 @@ function App() {
           {/* Public routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/provider-signup" element={<ProviderSignUp />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
@@ -75,7 +79,7 @@ function App() {
           <Route path="/profile" element={
             <RequireAuth>
               <Layout>
-                <Profile />
+                <UserProfileWithRole />
               </Layout>
             </RequireAuth>
           } />
@@ -95,7 +99,7 @@ function App() {
               </Layout>
             </RequireAuth>
           } />
-          
+
           {/* Analytics requires specific permissions */}
           <Route path="/analytics" element={
             <RequireAuth requiredPermissions={['analytics:read']}>
@@ -104,10 +108,19 @@ function App() {
               </Layout>
             </RequireAuth>
           } />
-          
+
           <Route path="/search" element={
             <RequireAuth>
               <SearchPage />
+            </RequireAuth>
+          } />
+
+          {/* Admin routes */}
+          <Route path="/admin" element={
+            <RequireAuth requiredRoles={['admin']}>
+              <Layout>
+                <AdminDashboard />
+              </Layout>
             </RequireAuth>
           } />
         </Routes>
