@@ -4,7 +4,7 @@ import * as FiIcons from 'react-icons/fi';
 import { usePayment } from '../../contexts/PaymentContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 
-const { FiCreditCard, FiPhone, FiDollarSign, FiChevronRight } = FiIcons;
+const { FiCreditCard, FiPhone, FiDollarSign, FiChevronRight, FiBitcoin, FiCalendar, FiTrendingUp } = FiIcons;
 
 const PaymentMethodSelector = ({ onSelect }) => {
   const { t } = useLanguage();
@@ -38,14 +38,34 @@ const PaymentMethodSelector = ({ onSelect }) => {
       borderColor: 'border-green-200',
     },
     { 
-      id: 'bank_transfer', 
-      name: t('payment.bankTransfer'),
-      icon: FiDollarSign, 
-      description: t('payment.bankTransferDesc'),
+      id: 'crypto', 
+      name: 'Cryptocurrency',
+      icon: FiBitcoin, 
+      description: 'Pay with Bitcoin, Ethereum, USDT, or USDC',
+      color: 'bg-orange-500',
+      textColor: 'text-orange-600',
+      bgColor: 'bg-orange-50',
+      borderColor: 'border-orange-200',
+    },
+    { 
+      id: 'payment_plan', 
+      name: 'Payment Plan',
+      icon: FiCalendar, 
+      description: 'Spread payments over 3-12 months',
       color: 'bg-purple-500',
       textColor: 'text-purple-600',
       bgColor: 'bg-purple-50',
       borderColor: 'border-purple-200',
+    },
+    { 
+      id: 'bank_transfer', 
+      name: t('payment.bankTransfer'),
+      icon: FiDollarSign, 
+      description: t('payment.bankTransferDesc'),
+      color: 'bg-indigo-500',
+      textColor: 'text-indigo-600',
+      bgColor: 'bg-indigo-50',
+      borderColor: 'border-indigo-200',
     }
   ];
   

@@ -239,7 +239,99 @@ export const PaymentProvider = ({ children }) => {
     }
   };
   
-  // Process Mobile Money payment
+  // Process Cryptocurrency payment
+  const processCryptoPayment = async (bookingId, amount, currency, cryptoCurrency, metadata = {}) => {
+    try {
+      // Create payment record
+      const payment = await createPayment({
+        booking_id: bookingId,
+        amount,
+        payment_method: 'crypto',
+        provider: cryptoCurrency,
+        payment_status: 'pending',
+        metadata: {
+          ...metadata,
+          crypto_currency: cryptoCurrency,
+          original_currency: currency
+        }
+      });
+
+      // Get crypto wallet address for the selected currency
+      const { data: walletData, error: walletError } = await supabase
+        .from('crypto_wallets_emirafrik')
+        .select('*')
+        .eq('currency', cryptoCurrency)
+        .eq('is_active', true)
+        .single();
+
+      if (walletError) throw new Error('Crypto wallet not available');
+
+      // Convert amount to crypto (this would normally use real-time exchange rates)
+      const cryptoRates = {
+        'BTC': 43000,
+        'ETH': 2600,
+        'USDT': 1,
+        'USDC': 1
+      };
+      
+      const cryptoAmount = amount / (cryptoRates[cryptoCurrency] || 1);
+
+      return {
+        paymentId: payment.id,
+        walletAddress: walletData.address,
+        cryptoAmount,
+        cryptoCurrency,
+        network: walletData.network,
+        expiresAt: new Date(Date.now() + 30 * 60 * 1000) // 30 minutes
+      };
+    } catch (error) {
+      console.error('Error processing crypto payment:', error);
+      throw error;
+    }
+  };
+
+  // Create Payment Plan
+  const createPaymentPlan = async (planData) => {
+    if (!user) throw new Error('User must be authenticated');
+
+    try {
+      const response = await fetch('/api/create-payment-plan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...planData,
+          user_id: user.id,
+          currency: selectedCurrency
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create payment plan');
+      }
+
+      const paymentPlan = await response.json();
+      return paymentPlan;
+    } catch (error) {
+      console.error('Error creating payment plan:', error);
+      throw error;
+    }
+  };
+
+  // Get crypto wallets
+  const getCryptoWallets = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('crypto_wallets_emirafrik')
+        .select('*')
+        .eq('is_active', true);
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error fetching crypto wallets:', error);
+      throw error;
+    }
+  };
   const processMomoPayment = async (bookingId, amount, provider, phoneNumber, metadata = {}) => {
     try {
       // Create payment record
@@ -309,6 +401,9 @@ export const PaymentProvider = ({ children }) => {
     stripeLoaded,
     processStripePayment,
     processMomoPayment,
+    processCryptoPayment,
+    createPaymentPlan,
+    getCryptoWallets,
     formatCurrency,
     getCurrencySymbol
   };
