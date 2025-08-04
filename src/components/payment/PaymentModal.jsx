@@ -6,6 +6,8 @@ import PaymentMethodSelector from './PaymentMethodSelector';
 import StripePaymentForm from './StripePaymentForm';
 import MomoPaymentForm from './MomoPaymentForm';
 import BankTransferForm from './BankTransferForm';
+import CryptoPaymentForm from './CryptoPaymentForm';
+import PaymentPlansForm from './PaymentPlansForm';
 import CurrencySelector from './CurrencySelector';
 import { useLanguage } from '../../contexts/LanguageContext';
 
@@ -26,6 +28,8 @@ const PaymentModal = ({ isOpen, onClose, bookingId, amount, onSuccess }) => {
       setSelectedMethod(method);
       if (method === 'stripe' || method === 'bank_transfer') {
         setStep('currency');
+      } else if (method === 'crypto' || method === 'payment_plan') {
+        setStep('payment'); // Crypto and payment plans handle their own flow
       } else {
         setStep('payment');
       }
@@ -93,6 +97,24 @@ const PaymentModal = ({ isOpen, onClose, bookingId, amount, onSuccess }) => {
             <BankTransferForm
               bookingId={bookingId}
               amount={amount}
+              onSuccess={handlePaymentSuccess}
+            />
+          );
+        } else if (selectedMethod === 'crypto') {
+          return (
+            <CryptoPaymentForm
+              bookingId={bookingId}
+              amount={amount}
+              currency="USD"
+              onSuccess={handlePaymentSuccess}
+            />
+          );
+        } else if (selectedMethod === 'payment_plan') {
+          return (
+            <PaymentPlansForm
+              bookingId={bookingId}
+              amount={amount}
+              currency="USD"
               onSuccess={handlePaymentSuccess}
             />
           );

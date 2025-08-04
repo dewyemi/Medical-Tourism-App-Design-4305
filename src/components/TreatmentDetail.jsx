@@ -16,7 +16,7 @@ const iconMap = {
   Eye: FiIcons.FiEye,
   Smile: FiIcons.FiSmile,
   Activity: FiIcons.FiActivity,
-  Brain: FiIcons.FiBrain,
+  Brain: FiIcons.FiZap, // FiBrain doesn't exist, using FiZap as alternative
   Scissors: FiIcons.FiScissors,
 };
 
