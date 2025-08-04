@@ -26,6 +26,7 @@ import Unauthorized from './pages/Unauthorized';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import PaymentsPage from './pages/PaymentsPage';
 import PatientJourney from './pages/PatientJourney';
+import LandingPage from './pages/LandingPage';
 
 function App() {
   return (
@@ -36,6 +37,8 @@ function App() {
             <PatientJourneyProvider>
               <Routes>
                 {/* Public routes */}
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/landing" element={<LandingPage />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/provider-signup" element={<ProviderSignUp />} />
@@ -44,7 +47,7 @@ function App() {
                 <Route path="/unauthorized" element={<Unauthorized />} />
                 
                 {/* Protected routes - basic user access */}
-                <Route path="/" element={
+                <Route path="/dashboard" element={
                   <RequireAuth>
                     <Layout>
                       <PatientJourney />

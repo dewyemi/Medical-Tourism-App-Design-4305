@@ -16,9 +16,9 @@ const RequireAuth = ({
     return <LoadingScreen />;
   }
 
-  // If not authenticated, redirect to login
+  // If not authenticated, redirect to landing page
   if (!user) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to="/landing" state={{ from: location }} replace />;
   }
 
   // Check required roles if specified
