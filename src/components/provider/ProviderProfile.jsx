@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import SafeIcon from '../../common/SafeIcon';
 import * as FiIcons from 'react-icons/fi';
@@ -6,7 +6,8 @@ import { getProviderProfile, requestProviderAppointment } from '../../services/p
 
 const { 
   FiUser, FiStar, FiAward, FiCalendar, FiMapPin, FiClock, 
-  FiMail, FiPhone, FiGlobe, FiCheckCircle, FiBookOpen, FiMessageSquare 
+  FiMail, FiPhone, FiGlobe, FiCheckCircle, FiBookOpen, FiMessageSquare,
+  FiThumbsUp, FiInfo
 } = FiIcons;
 
 const ProviderProfile = () => {

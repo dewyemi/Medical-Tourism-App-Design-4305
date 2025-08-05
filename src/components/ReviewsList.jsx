@@ -1,4 +1,3 @@
-import React from 'react';
 import SafeIcon from '../common/SafeIcon';
 import * as FiIcons from 'react-icons/fi';
 import { formatDate } from '../utils/dataUtils';

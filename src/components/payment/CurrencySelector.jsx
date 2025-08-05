@@ -1,4 +1,3 @@
-import React from 'react';
 import SafeIcon from '../../common/SafeIcon';
 import * as FiIcons from 'react-icons/fi';
 import { usePayment } from '../../contexts/PaymentContext';

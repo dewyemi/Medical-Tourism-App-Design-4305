@@ -10,8 +10,38 @@ if(SUPABASE_URL === 'https://<PROJECT-ID>.supabase.co' || SUPABASE_ANON_KEY === 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: {
     persistSession: true,
-    autoRefreshToken: true
+    autoRefreshToken: true,
+    detectSessionInUrl: true
+  },
+  global: {
+    headers: {
+      'x-application-name': 'emirafrik-medical-tourism'
+    }
+  },
+  db: {
+    schema: 'public'
+  },
+  realtime: {
+    params: {
+      eventsPerSecond: 10
+    }
   }
 })
+
+// Add connection health check
+export const checkConnection = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('user_roles_meditravel_x8f24k')
+      .select('count')
+      .limit(1);
+    
+    if (error) throw error;
+    return { connected: true, error: null };
+  } catch (error) {
+    console.warn('Supabase connection check failed:', error.message);
+    return { connected: false, error: error.message };
+  }
+};
 
 export default supabase;

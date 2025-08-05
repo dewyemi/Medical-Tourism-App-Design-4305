@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 
 // Component that conditionally renders content based on user roles or permissions
