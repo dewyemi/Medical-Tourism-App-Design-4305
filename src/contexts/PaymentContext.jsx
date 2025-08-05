@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import supabase from '../lib/supabase';
 import { useAuth } from './AuthContext';
 
@@ -70,6 +70,16 @@ export const PaymentProvider = ({ children }) => {
         }
       } catch (error) {
         console.error('Error loading currencies:', error);
+        // Fallback currencies when API is unavailable
+        setCurrencies([
+          { code: 'USD', name: 'US Dollar', symbol: '$', is_active: true },
+          { code: 'EUR', name: 'Euro', symbol: '€', is_active: true },
+          { code: 'GBP', name: 'British Pound', symbol: '£', is_active: true },
+          { code: 'AED', name: 'UAE Dirham', symbol: 'AED', is_active: true },
+          { code: 'TRY', name: 'Turkish Lira', symbol: '₺', is_active: true },
+          { code: 'THB', name: 'Thai Baht', symbol: '฿', is_active: true },
+          { code: 'INR', name: 'Indian Rupee', symbol: '₹', is_active: true }
+        ]);
       } finally {
         setLoadingCurrencies(false);
       }
@@ -93,6 +103,41 @@ export const PaymentProvider = ({ children }) => {
         setMomoProviders(data);
       } catch (error) {
         console.error('Error loading MoMo providers:', error);
+        // Fallback MoMo providers when API is unavailable
+        setMomoProviders([
+          { 
+            id: 'mtn_gh', 
+            name: 'MTN Ghana', 
+            country: 'Ghana', 
+            code: 'MTN', 
+            is_active: true,
+            logo_url: '/logos/mtn.png'
+          },
+          { 
+            id: 'vodafone_gh', 
+            name: 'Vodafone Ghana', 
+            country: 'Ghana', 
+            code: 'VODAFONE', 
+            is_active: true,
+            logo_url: '/logos/vodafone.png'
+          },
+          { 
+            id: 'airtel_africa', 
+            name: 'Airtel Africa', 
+            country: 'Multi-country', 
+            code: 'AIRTEL', 
+            is_active: true,
+            logo_url: '/logos/airtel.png'
+          },
+          { 
+            id: 'orange_africa', 
+            name: 'Orange Africa', 
+            country: 'Multi-country', 
+            code: 'ORANGE', 
+            is_active: true,
+            logo_url: '/logos/orange.png'
+          }
+        ]);
       } finally {
         setLoadingMomoProviders(false);
       }

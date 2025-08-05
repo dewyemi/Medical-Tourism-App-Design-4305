@@ -1,4 +1,3 @@
-import React from 'react';
 import {HashRouter as Router, Routes, Route} from 'react-router-dom';
 import {AuthProvider} from './contexts/AuthContext';
 import {LanguageProvider} from './contexts/LanguageContext';
@@ -6,27 +5,32 @@ import {PaymentProvider} from './contexts/PaymentContext';
 import {PatientJourneyProvider} from './contexts/PatientJourneyContext';
 import RequireAuth from './components/auth/RequireAuth';
 import Layout from './components/Layout';
-import Home from './pages/Home';
-import Destinations from './pages/Destinations';
-import DestinationDetail from './components/DestinationDetail';
-import Treatments from './pages/Treatments';
-import TreatmentDetail from './components/TreatmentDetail';
-import Profile from './pages/Profile';
-import ProfileForm from './components/ProfileForm';
-import UserProfileWithRole from './components/UserProfileWithRole';
-import Bookings from './pages/Bookings';
-import Analytics from './pages/Analytics';
+import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import ProviderSignUp from './pages/ProviderSignUp';
 import ResetPassword from './pages/ResetPassword';
 import UpdatePassword from './pages/UpdatePassword';
-import SearchPage from './pages/SearchPage';
 import Unauthorized from './pages/Unauthorized';
-import AdminDashboard from './pages/admin/AdminDashboard';
-import PaymentsPage from './pages/PaymentsPage';
-import PatientJourney from './pages/PatientJourney';
-import LandingPage from './pages/LandingPage';
+
+// Lazy load heavy components for better performance
+import { lazy, Suspense } from 'react';
+import LoadingScreen from './components/common/LoadingScreen';
+
+const Home = lazy(() => import('./pages/Home'));
+const Destinations = lazy(() => import('./pages/Destinations'));
+const DestinationDetail = lazy(() => import('./components/DestinationDetail'));
+const Treatments = lazy(() => import('./pages/Treatments'));
+const TreatmentDetail = lazy(() => import('./components/TreatmentDetail'));
+const Profile = lazy(() => import('./pages/Profile'));
+const ProfileForm = lazy(() => import('./components/ProfileForm'));
+const UserProfileWithRole = lazy(() => import('./components/UserProfileWithRole'));
+const Bookings = lazy(() => import('./pages/Bookings'));
+const Analytics = lazy(() => import('./pages/Analytics'));
+const SearchPage = lazy(() => import('./pages/SearchPage'));
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
+const PaymentsPage = lazy(() => import('./pages/PaymentsPage'));
+const PatientJourney = lazy(() => import('./pages/PatientJourney'));
 
 function App() {
   return (
@@ -50,7 +54,9 @@ function App() {
                 <Route path="/dashboard" element={
                   <RequireAuth>
                     <Layout>
-                      <PatientJourney />
+                      <Suspense fallback={<LoadingScreen />}>
+                        <PatientJourney />
+                      </Suspense>
                     </Layout>
                   </RequireAuth>
                 } />
@@ -58,7 +64,9 @@ function App() {
                 <Route path="/destinations" element={
                   <RequireAuth>
                     <Layout>
-                      <Destinations />
+                      <Suspense fallback={<LoadingScreen />}>
+                        <Destinations />
+                      </Suspense>
                     </Layout>
                   </RequireAuth>
                 } />
@@ -66,7 +74,9 @@ function App() {
                 <Route path="/destinations/:id" element={
                   <RequireAuth>
                     <Layout>
-                      <DestinationDetail />
+                      <Suspense fallback={<LoadingScreen />}>
+                        <DestinationDetail />
+                      </Suspense>
                     </Layout>
                   </RequireAuth>
                 } />
@@ -74,7 +84,9 @@ function App() {
                 <Route path="/treatments" element={
                   <RequireAuth>
                     <Layout>
-                      <Treatments />
+                      <Suspense fallback={<LoadingScreen />}>
+                        <Treatments />
+                      </Suspense>
                     </Layout>
                   </RequireAuth>
                 } />
@@ -82,7 +94,9 @@ function App() {
                 <Route path="/treatments/:id" element={
                   <RequireAuth>
                     <Layout>
-                      <TreatmentDetail />
+                      <Suspense fallback={<LoadingScreen />}>
+                        <TreatmentDetail />
+                      </Suspense>
                     </Layout>
                   </RequireAuth>
                 } />
@@ -90,7 +104,9 @@ function App() {
                 <Route path="/profile" element={
                   <RequireAuth>
                     <Layout>
-                      <UserProfileWithRole />
+                      <Suspense fallback={<LoadingScreen />}>
+                        <UserProfileWithRole />
+                      </Suspense>
                     </Layout>
                   </RequireAuth>
                 } />
@@ -98,7 +114,9 @@ function App() {
                 <Route path="/profile/edit" element={
                   <RequireAuth>
                     <Layout>
-                      <ProfileForm />
+                      <Suspense fallback={<LoadingScreen />}>
+                        <ProfileForm />
+                      </Suspense>
                     </Layout>
                   </RequireAuth>
                 } />
@@ -106,7 +124,9 @@ function App() {
                 <Route path="/bookings" element={
                   <RequireAuth requiredPermissions={['bookings:read']}>
                     <Layout>
-                      <Bookings />
+                      <Suspense fallback={<LoadingScreen />}>
+                        <Bookings />
+                      </Suspense>
                     </Layout>
                   </RequireAuth>
                 } />
@@ -114,7 +134,9 @@ function App() {
                 <Route path="/payments" element={
                   <RequireAuth requiredPermissions={['bookings:read']}>
                     <Layout>
-                      <PaymentsPage />
+                      <Suspense fallback={<LoadingScreen />}>
+                        <PaymentsPage />
+                      </Suspense>
                     </Layout>
                   </RequireAuth>
                 } />
@@ -122,7 +144,9 @@ function App() {
                 <Route path="/journey" element={
                   <RequireAuth>
                     <Layout>
-                      <PatientJourney />
+                      <Suspense fallback={<LoadingScreen />}>
+                        <PatientJourney />
+                      </Suspense>
                     </Layout>
                   </RequireAuth>
                 } />
@@ -131,14 +155,18 @@ function App() {
                 <Route path="/analytics" element={
                   <RequireAuth requiredPermissions={['analytics:read']}>
                     <Layout>
-                      <Analytics />
+                      <Suspense fallback={<LoadingScreen />}>
+                        <Analytics />
+                      </Suspense>
                     </Layout>
                   </RequireAuth>
                 } />
                 
                 <Route path="/search" element={
                   <RequireAuth>
-                    <SearchPage />
+                    <Suspense fallback={<LoadingScreen />}>
+                      <SearchPage />
+                    </Suspense>
                   </RequireAuth>
                 } />
                 
@@ -146,7 +174,9 @@ function App() {
                 <Route path="/admin" element={
                   <RequireAuth requiredRoles={['admin']}>
                     <Layout>
-                      <AdminDashboard />
+                      <Suspense fallback={<LoadingScreen />}>
+                        <AdminDashboard />
+                      </Suspense>
                     </Layout>
                   </RequireAuth>
                 } />

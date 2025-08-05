@@ -4,13 +4,8 @@ import supabase from '../lib/supabase';
  * Fetches all available roles
  */
 export const getAllRoles = async () => {
-  try {
-    // Since we have a fixed set of roles, we can return them directly
-    return ['patient', 'admin', 'healthcare_provider'];
-  } catch (error) {
-    console.error('Error fetching roles:', error);
-    throw error;
-  }
+  // Since we have a fixed set of roles, we can return them directly
+  return ['patient', 'admin', 'healthcare_provider'];
 };
 
 /**

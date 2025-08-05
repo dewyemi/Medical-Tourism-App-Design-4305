@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { usePatientJourney } from '../contexts/PatientJourneyContext';
 import JourneyProgressBar from '../components/journey/JourneyProgressBar';
 import MilestonesCard from '../components/journey/MilestonesCard';

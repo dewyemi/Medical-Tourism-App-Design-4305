@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import supabase from '../lib/supabase';
 
 // Create language context
@@ -30,6 +30,69 @@ const loadTranslations = async (lang) => {
     translations[lang] = translationObj;
   } catch (error) {
     console.error(`Error loading translations for ${lang}:`, error);
+    
+    // Fallback translations when API is unavailable
+    const fallbackTranslations = {
+      en: {
+        'app.title': 'EmirAfrik Medical Tourism',
+        'auth.login': 'Login',
+        'auth.signup': 'Sign Up',
+        'auth.logout': 'Logout',
+        'nav.home': 'Home',
+        'nav.destinations': 'Destinations',
+        'nav.treatments': 'Treatments',
+        'nav.profile': 'Profile',
+        'nav.bookings': 'Bookings',
+        'nav.analytics': 'Analytics',
+        'common.loading': 'Loading...',
+        'common.error': 'An error occurred',
+        'common.save': 'Save',
+        'common.cancel': 'Cancel',
+        'common.submit': 'Submit',
+        'common.back': 'Back',
+        'common.next': 'Next'
+      },
+      fr: {
+        'app.title': 'Tourisme Médical EmirAfrik',
+        'auth.login': 'Connexion',
+        'auth.signup': "S'inscrire",
+        'auth.logout': 'Déconnexion',
+        'nav.home': 'Accueil',
+        'nav.destinations': 'Destinations',
+        'nav.treatments': 'Traitements',
+        'nav.profile': 'Profil',
+        'nav.bookings': 'Réservations',
+        'nav.analytics': 'Analytiques',
+        'common.loading': 'Chargement...',
+        'common.error': 'Une erreur s\'est produite',
+        'common.save': 'Sauvegarder',
+        'common.cancel': 'Annuler',
+        'common.submit': 'Soumettre',
+        'common.back': 'Retour',
+        'common.next': 'Suivant'
+      },
+      ar: {
+        'app.title': 'السياحة العلاجية إميرأفريك',
+        'auth.login': 'تسجيل الدخول',
+        'auth.signup': 'إنشاء حساب',
+        'auth.logout': 'تسجيل الخروج',
+        'nav.home': 'الرئيسية',
+        'nav.destinations': 'الوجهات',
+        'nav.treatments': 'العلاجات',
+        'nav.profile': 'الملف الشخصي',
+        'nav.bookings': 'الحجوزات',
+        'nav.analytics': 'التحليلات',
+        'common.loading': 'جاري التحميل...',
+        'common.error': 'حدث خطأ',
+        'common.save': 'حفظ',
+        'common.cancel': 'إلغاء',
+        'common.submit': 'إرسال',
+        'common.back': 'العودة',
+        'common.next': 'التالي'
+      }
+    };
+    
+    translations[lang] = fallbackTranslations[lang] || fallbackTranslations.en;
   }
 };
 
